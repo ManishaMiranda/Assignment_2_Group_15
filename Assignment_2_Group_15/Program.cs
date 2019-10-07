@@ -27,34 +27,35 @@ namespace Assignment_2_Group_15
             Console.WriteLine("Q3: " + "The max qualified Value is: " + Value);
             Console.ReadKey();
 
+            ////Q4
             string keyboard = "abcdefghijklmnopqrstuvwxyz";
             string word = "cba";
-            Console.WriteLine("Time taken to type with one finger = {0}\n", CalculateTime(keyboard, word));
+            Console.WriteLine("Q4: Time taken to type with one finger = {0}\n", CalculateTime(keyboard, word));
 
             int[,] image = { { 1, 1, 0 }, { 1, 0, 1 }, { 0, 0, 0 } };
             int[,] flipAndInvertedImage = FlipAndInvertImage(image);
-            Console.WriteLine("The resulting flipped and inverted image is:\n");
+            Console.WriteLine("Q5: The resulting flipped and inverted image is:\n");
             Display2DArray(flipAndInvertedImage);
             Console.Write("\n");
 
             int[,] intervals = { { 0, 30 }, { 5, 10 }, { 15, 20 } };
             int minMeetingRooms = MinMeetingRooms(intervals);
-            Console.WriteLine("Minimum meeting rooms needed = {0}\n", minMeetingRooms);
+            Console.WriteLine("Q6: Minimum meeting rooms needed = {0}\n", minMeetingRooms);
 
             int[] arr = { -4, -1, 0, 3, 10 };
             int[] sortedSquares = SortedSquares(arr);
-            Console.WriteLine("Squares of the array in sorted order is:");
+            Console.WriteLine("Q7: Squares of the array in sorted order is:");
             DisplayArray(sortedSquares);
             Console.Write("\n");
 
             string s = "abca";
             if (ValidPalindrome(s))
             {
-                Console.WriteLine("The given string \"{0}\" can be made PALINDROME", s);
+                Console.WriteLine("Q8: The given string \"{0}\" can be made PALINDROME", s);
             }
             else
             {
-                Console.WriteLine("The given string \"{0}\" CANNOT be made PALINDROME", s);
+                Console.WriteLine("Q8: The given string \"{0}\" CANNOT be made PALINDROME", s);
             }
         }
 
@@ -192,7 +193,23 @@ namespace Assignment_2_Group_15
         {
             try
             {
-                // Write your code here
+                
+                int diff = 0;
+
+                for (int i = 0; i < word.Length; i++)
+                {
+                    if (i == 0) { diff = keyboard.IndexOf(word[i]); }
+
+                    else
+                    {
+
+                        diff = diff + Math.Abs(keyboard.IndexOf(word[i - 1]) - keyboard.IndexOf(word[i]));
+
+                    }
+                }
+
+
+                return diff;
             }
             catch
             {
@@ -207,6 +224,23 @@ namespace Assignment_2_Group_15
             try
             {
                 // Write your code here
+                int r = A.GetLength(0);
+                int c = A.GetLength(1);
+                int[,] temp = new int[r, c];
+                for (int i = 0; i < r; i++)
+                {
+
+
+                    for (int j = c - 1; j >= 0; j--)
+                    {
+                        temp[i, c - 1 - j] = 1 - A[i, j];
+
+                    }
+
+
+                }
+
+                return temp;
             }
             catch
             {
@@ -221,6 +255,34 @@ namespace Assignment_2_Group_15
             try
             {
                 // Write your code here
+                List<int> start_time = new List<int>();
+                List<int> end_time = new List<int>();
+                for (int i = 0; i < intervals.GetLength(0); i++)
+                {
+                    start_time.Add(intervals[i, 0]);
+                }
+                for (int i = 0; i < intervals.GetLength(0); i++)
+                {
+                    end_time.Add(intervals[i, 1]);
+                }
+                start_time.Sort();
+                end_time.Sort();
+                int k = 0, j = 0, rooms = 0;
+
+                while (k < intervals.GetLength(0))
+                {
+                    if (start_time[k] < end_time[j])
+                    {
+                        k++;
+                    }
+
+                    else if (start_time[k] > end_time[j])
+                    {
+                        j++;
+                    }
+                    rooms = Math.Max(rooms, k - j);
+                }
+                return rooms;
             }
             catch
             {
@@ -235,6 +297,46 @@ namespace Assignment_2_Group_15
             try
             {
                 // Write your code here
+                int length = A.Length;
+                int k;
+                for (k = 0; k < length; k++)
+                {
+                    if (A[k] >= 0) break;
+                }
+
+                int m = 0; int i = k - 1; int j = k;
+
+
+
+                int[] sortedSquares = new int[length];
+                while (i >= 0 && j < length)
+                {
+                    if (A[i] * A[i] < A[j] * A[j])
+                    {
+                        sortedSquares[m] = A[i] * A[i];
+                        i = i - 1;
+                    }
+                    else
+                    {
+                        sortedSquares[m] = A[j] * A[j];
+                        j++;
+                    }
+                    m = m + 1;
+                }
+
+                while (i >= 0)
+                {
+                    sortedSquares[m++] = A[i] * A[i];
+                    i--;
+                }
+                while (j < length)
+                {
+                    sortedSquares[m++] = A[j] * A[j];
+                    j++;
+                }
+
+
+                return sortedSquares;
             }
             catch
             {
@@ -249,6 +351,37 @@ namespace Assignment_2_Group_15
             try
             {
                 // Write your code here
+                int left = 0; int right = s.Length - 1;
+                bool PalindromeCheck(string r)
+                {
+                    int length = r.Length;
+                    for (int i = 0; i < length / 2; i++)
+                    {
+                        if (r[i] != r[length - i - 1])
+                            return false;
+                    }
+                    return true;
+                }
+
+
+                while (left < right)
+                {
+                    if (s[left] == s[right])
+                    {
+                        left = left + 1; right = right - 1;
+                    }
+
+                    else
+                    {
+                        if (PalindromeCheck(s.Substring(left + 1, right - left)) || PalindromeCheck(s.Substring(left, right - left)))
+                        {
+                            return true;
+                        }
+
+                        else return false;
+                    }
+                }
+                return true;
             }
             catch
             {
